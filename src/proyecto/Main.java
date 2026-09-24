@@ -15,7 +15,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        String videoPath = (args.length > 0) ? args[0] : "cat.mp4";
+        String videoPath = (args.length > 0) ? args[0] : "cat.mp4"; // fallback a cat.mp4 por ahora. . .
         out.printf(">>> Iniciando procesador ASCII con el video: %s\n", videoPath);
 
         // 1. Abrir la captura de video con OpenCV
@@ -37,18 +37,20 @@ public class Main {
 
         // 2. Inicializar y configurar el pipeline nativo ASCII
         try (AsciiPipeline pipeline = new AsciiPipeline()) {
-            // Se envía 'videoPath' como primer parámetro para permitir la remuxación de audio en C++
-            pipeline.setOutput(videoPath, args.length > 1 ? args[1] : "java_out.mp4", args.length > 2 ? args[2] : "ascii_txt_frames");
+            pipeline.setOutput(
+                videoPath,
+                args.length > 1 ? args[1] : "java_out.mp4",
+                args.length > 2 ? args[2] : "ascii_txt_frames"
+            );
             
             // Configurar dimensiones de entrada, salida y columnas ASCII
-            pipeline.setDimensions(inW, inH, inW, inH, 2048);
+            pipeline.setDimensions(inW, inH, inW, inH, 1024);
             
             // out.printf("inW: %d\ninH: %d\n", inW, inH);
-            // Ajustar tipografía y FPS
             
-            pipeline.setFont(128, 128, 0.125/2.0, 1);
+            pipeline.setFont(64, 64, 0.125, 1);
             pipeline.setFps(fps);
-            // pipeline.setCharset("!?@$%#mM0123456789*+=-:;.,/()[\\]<=>'\"{|}~`_ ");
+            pipeline.setCharset("!?@$%#mM0123456789*+=-:;.,/()[\\]<=>'\"{|}~`_ ");
             // pipeline.setCharset("<=>&?#@$%~+*^-?Mmdbpq_/|\\'\".:{}[]() ");
             // pipeline.setCharset("#@%^$/\\!:;.,-{|}$<=> ");
             // pipeline.setCharset("@#^~[]{}()/|.:'\"\\<=>$-+* ");
@@ -69,13 +71,13 @@ public class Main {
                 frameCount++;
                 boolean isLastFrame = (frameCount == totalFrames);
 
-                // Convertir espacio de color de BGR (OpenCV) a RGB (FFmpeg)
+                // Convertir espacio de color de BGR (OpenCV) a RGB (FFmpeg). . .
                 Imgproc.cvtColor(frame, frameRGB, Imgproc.COLOR_BGR2RGB);
 
-                // Copiar el buffer de la matriz de OpenCV convertida a nuestro arreglo de bytes
+                // Copiar el buffer de la matriz de OpenCV convertida a nuestro arreglo de bytes. . .
                 frameRGB.get(0, 0, frameBuffer);
 
-                // Enviar buffer crudo al pipeline C++
+                // Enviar buffer crudo al pipeline C++. . .
                 boolean ok = pipeline.processFrame(frameBuffer, isLastFrame);
                 if (!ok) {
                     err.printf("Error procesando el frame nativo #%d\n", frameCount);
