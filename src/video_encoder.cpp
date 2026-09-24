@@ -42,7 +42,7 @@ bool VideoEncoder::init(const PipelineConfig& config, const std::string& inputSo
     avformat_alloc_output_context2(&outFmtCtx, nullptr, nullptr, config.outputFile);
     if (!outFmtCtx) return false;
 
-    // 1. Inicializar la codificación de video (H.264)
+    // Inicializar la codificación de video (H.264)
     const AVCodec* codec = avcodec_find_encoder(AV_CODEC_ID_H264);
     if (!codec) return false;
 
@@ -58,16 +58,14 @@ bool VideoEncoder::init(const PipelineConfig& config, const std::string& inputSo
 
     av_opt_set(videoCodecCtx->priv_data, "preset", "ultrafast", 0);
 
-    if (outFmtCtx->oformat->flags & AVFMT_GLOBALHEADER)
-        videoCodecCtx->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
-
+    if (outFmtCtx->oformat->flags & AVFMT_GLOBALHEADER) videoCodecCtx->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
     if (avcodec_open2(videoCodecCtx, codec, nullptr) < 0) return false;
     avcodec_parameters_from_context(videoStream->codecpar, videoCodecCtx);
 
-    // 2. Si preserveAudio está activo, configurar el remuxing nativo
+    // Si preserveAudio está activo, configurar el remuxing nativo
     if (config.preserveAudio && !inputSource.empty()) initAudioRemuxing(inputSource);
 
-    // 3. Abrir archivo de salida y escribir cabecera
+    // Abrir archivo de salida y escribir cabecera
     if (!(outFmtCtx->oformat->flags & AVFMT_NOFILE)) {
         if (avio_open(&outFmtCtx->pb, config.outputFile, AVIO_FLAG_WRITE) < 0) return false;
     }
