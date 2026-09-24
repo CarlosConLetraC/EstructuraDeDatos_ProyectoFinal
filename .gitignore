@@ -1,0 +1,8 @@
+ascii_txt_frames*/
+*.class
+*.so
+bin/
+build/
+*out*
+bad*
+*result*
