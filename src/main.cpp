@@ -60,7 +60,8 @@ int main(int argc, char** argv) {
     int calculatedThickness = (calculatedCellW > 16) ? 2 : 1;
 
     config.inputFile = inputVideo.c_str();
-    config.outputFile = argc >= 3 ? argv[argc-1] : "test_native_out.mp4";
+    config.outputFile = argc > 2 ? argv[2] : "test_native_out.mp4";
+    config.txtOutputDir = argc > 3 ? argv[3] : "ascii_txt_frames";
     config.asciiCharset = "!?@$%#mMqpdb^0123456789*+=-:;.,/()[\\]<=>'\"{|}~`_ ";
     config.fps = fps;
     config.inW = videoWidth;
@@ -76,8 +77,7 @@ int main(int argc, char** argv) {
 
     std::cout << "--- Ejecutando Test Nativo C++ ---" << std::endl;
     std::cout << "Video original : " << inputVideo << " (" << videoWidth << "x" << videoHeight << " @ " << fps << " FPS)" << std::endl;
-    std::cout << "Config ASCII   : " << config.asciiCols << " cols | Celda: " 
-              << config.font.cellW << "x" << config.font.cellH << " px" << std::endl;
+    std::cout << "Config ASCII   : " << config.asciiCols << " cols | Celda: " << config.font.cellW << "x" << config.font.cellH << " px" << std::endl;
     std::cout << "Fuente         : Scale=" << config.font.fontScale << " | Thickness=" << config.font.thickness << std::endl;
     std::cout << "Total frames   : " << totalFrames << std::endl;
 

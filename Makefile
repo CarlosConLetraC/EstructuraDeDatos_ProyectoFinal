@@ -15,7 +15,7 @@ LDFLAGS     := -lavcodec -lavformat -lavutil -lswscale -lopencv_core -lopencv_im
 TEST_CXXFLAGS := $(CXXFLAGS)
 TEST_LDFLAGS  := $(LDFLAGS) -lopencv_videoio
 
-VID ?= ricardo_pendejo_XD.mp4
+VID ?= cat.mp4
 
 SRC_DIR     := src
 BUILD_DIR   := out
