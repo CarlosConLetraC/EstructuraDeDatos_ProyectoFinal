@@ -10,8 +10,16 @@ import static java.lang.System.err;
 
 public class Main {
     static {
-        // Cargar las bibliotecas nativas de OpenCV del sistema
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        // Carga robusta de la biblioteca nativa de OpenCV
+        try {
+            System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        } catch (UnsatisfiedLinkError e1) {
+            try {
+                System.loadLibrary("opencv_java500");
+            } catch (UnsatisfiedLinkError e2) {
+                System.loadLibrary("opencv_java");
+            }
+        }
     }
 
     public static void main(String[] args) {
@@ -72,7 +80,7 @@ public class Main {
                 boolean isLastFrame = (frameCount == totalFrames);
 
                 // Convertir espacio de color de BGR (OpenCV) a RGB (FFmpeg). . .
-                Imgproc.cvtColor(frame, frameRGB, Imgproc.COLOR_BGR2RGB);
+                Imgproc.cvtColor(frame, frameRGB, Imgproc.COLOR_BGR2RGB, 3);
 
                 // Copiar el buffer de la matriz de OpenCV convertida a nuestro arreglo de bytes. . .
                 frameRGB.get(0, 0, frameBuffer);
@@ -87,6 +95,8 @@ public class Main {
                 // if (frameCount % fps == 0 || isLastFrame) {
                     out.printf("Procesados %d/%d frames...%n", frameCount, totalFrames);
                 // }
+                frame.release();
+                frameRGB.release();
             }
 
             long elapsedTime = System.currentTimeMillis() - startTime;

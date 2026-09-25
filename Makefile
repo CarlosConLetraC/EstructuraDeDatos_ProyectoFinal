@@ -1,12 +1,13 @@
 CXX         := g++
-JAVA_HOME   ?= /opt/jdk-26.0.2
+JAVA_HOME   := /opt/jdk-26.0.2
 JAVAC       := $(JAVA_HOME)/bin/javac
 JAVA        := $(JAVA_HOME)/bin/java
 
-# Inclusión de cabeceras locales, OpenCV y el JDK de Java
+# Inclusión de cabeceras locales, JDK de Java y uso de -isystem para OpenCV
+# (-isystem silencia las advertencias de cabeceras de terceros como -Wcast-qual)
 CXXFLAGS    := -O2 -Wall -Wextra -Wcast-align -Wcast-qual -std=c++17 -fPIC \
                -Iinclude \
-               -I/usr/include/opencv5 \
+               -isystem /usr/include/opencv5 \
                -I$(JAVA_HOME)/include \
                -I$(JAVA_HOME)/include/linux
 
@@ -29,19 +30,20 @@ DRAW_TARGET := $(BIN_DIR)/draw
 
 # Archivos Java
 JAVA_SRC_DIR := $(SRC_DIR)/proyecto
-JAVA_CLASSES := $(BUILD_DIR)/proyecto/AsciiPipeline.class $(BUILD_DIR)/proyecto/Main.class
+JAVA_SRCS    := $(wildcard $(JAVA_SRC_DIR)/*.java)
+JAVA_CLASSES := $(patsubst $(JAVA_SRC_DIR)/%.java,$(BUILD_DIR)/proyecto/%.class,$(JAVA_SRCS))
 
 .PHONY: all java clean test draw help
 
-# 'all' ahora compila tanto Java como la librería C++
+# Compila tanto Java como la librería C++ (.so)
 all: java $(TARGET_SO)
 
-# Compilar clases Java usando el javac del JDK
+# Compila las clases Java forzando el objetivo de bytecode para Java 26
 java: $(JAVA_CLASSES)
 
 $(BUILD_DIR)/proyecto/%.class: $(JAVA_SRC_DIR)/%.java
 	@mkdir -p $(BUILD_DIR)/proyecto
-	$(JAVAC) -cp /usr/share/java/opencv5/opencv-500.jar:src -d $(BUILD_DIR) $(JAVA_SRC_DIR)/*.java
+	$(JAVAC) --release 26 -cp /usr/share/java/opencv5/opencv-500.jar:src -d $(BUILD_DIR) $(JAVA_SRCS)
 	@echo "Clases Java compiladas con éxito en $(BUILD_DIR)."
 
 # Compilar la librería compartida .so (para JNI)
@@ -65,7 +67,7 @@ test: $(SRC_DIR)/main.cpp $(LIB_SRCS)
 	./$(TARGET_BIN) $(VID)
 
 clean:
-	rm -rf $(BUILD_DIR) $(BIN_DIR) $(TARGET_SO) *out*.mp4 ascii_txt_frames out
+	rm -rf $(BUILD_DIR) $(BIN_DIR) $(TARGET_SO) *out*.mp4 ascii_txt_frames
 	@echo "Limpieza completada."
 
 help:

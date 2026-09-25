@@ -71,7 +71,7 @@ public class AsciiPipeline implements AutoCloseable {
     @Override
     public void close() {
         if (this.statePtr != 0) {
-            closeState(this.statePtr);
+            this.closeState(this.statePtr);
             this.statePtr = 0;
         }
     }
