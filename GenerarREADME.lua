@@ -133,9 +133,9 @@ local function build_readme_markdown()
     add_line("$$\\bar{Y}_{k,l} = \\frac{1}{w_c \\cdot h_c} \\sum_{i=0}^{w_c-1} \\sum_{j=0}^{h_c-1} Y(k \\cdot w_c + i, \\; l \\cdot h_c + j)$$")
     add_line("- $w_c, h_c$: Ancho y alto de celda en píxeles.")
     add_line("- $k, l$: Coordenadas del carácter en la matriz final.\n")
-    add_line("### 3. Mapeo Lineal a Rampa de Caracteres (LUT)")
-    add_line("Sea $S$ una cadena de caracteres ordenada por densidad cromática de menor a mayor (ejemplo: `\" .:-=+*%@\"`) y $N = \vert{}S\vert{}$ la cantidad total de caracteres. El índice $idx$ se mapea mediante:")
-    add_line("$$idx = \\left\\lfloor \\frac{\\bar{Y}_{k,l}}{255} \\cdot (N - 1) \\right\\rfloor$$")
+    add_line("### 3. Mapeo Lineal a Rampa de Caracteres (LUT)\n")
+    add_line("Sea $S$ una cadena de caracteres ordenada por densidad cromática de menor a mayor (ejemplo: `\" .:-=+*%@\"`) y $N = \\vert S \\vert$ la cantidad total de caracteres. El índice $idx$ se mapea mediante:\n")
+    add_line("$$idx = \\left\\lfloor \\frac{\\bar{Y}_{k,l}}{255} \\cdot (N - 1) \\right\\rfloor$$\n")
     add_line("$$\\text{Carácter asignado} = S[idx]$$\n")
 
     -- Seccion 8
