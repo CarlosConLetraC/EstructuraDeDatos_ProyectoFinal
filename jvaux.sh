@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Configuración del JDK portable (puedes cambiarlo aquí o sobreescribirlo al ejecutar: JDK_DIR=/opt/jdk-27 jrun ...)
 JDK_DIR="${JDK_DIR:-/opt/jdk-26.0.2}"
 
 JAVA_HOME="$JDK_DIR"
