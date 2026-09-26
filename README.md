@@ -1,4 +1,3 @@
-# UNIVERSIDAD TECMILENIO
 ## Ingeniería en Desarrollo de Software
 **Asignatura:** Estructuras de Datos  
 **Fecha:** Septiembre, 2026  
