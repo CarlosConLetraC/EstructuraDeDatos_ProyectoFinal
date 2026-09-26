@@ -1,4 +1,3 @@
-## Ingeniería en Desarrollo de Software
 **Asignatura:** Estructuras de Datos  
 **Fecha:** Septiembre, 2026  
 
@@ -36,7 +35,7 @@ Declaramos explícitamente la modalidad elegida para el desarrollo del proyecto 
                                      v
 +-------------------------------------------------------------------------+
 |                              VIDEO INPUT                                |
-|   [OpenCV Capture] ----> [Java Runner] (Main.java)                     |
+|   [OpenCV Capture] ----> [Java Runner] (Main.java)                      |
 +-------------------------------------------------------------------------+
                                      |
                                      v
