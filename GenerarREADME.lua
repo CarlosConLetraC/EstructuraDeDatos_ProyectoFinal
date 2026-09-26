@@ -19,8 +19,6 @@ local function build_readme_markdown()
     end
 
     -- Encabezado / Portada
-    add_line("# UNIVERSIDAD TECMILENIO")
-    add_line("## Ingeniería en Desarrollo de Software")
     add_line("**Asignatura:** Estructuras de Datos  ")
     add_line("**Fecha:** Septiembre, 2026  \n")
     add_line("---")
