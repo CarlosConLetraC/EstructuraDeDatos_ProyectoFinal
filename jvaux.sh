@@ -41,8 +41,8 @@ download_opencv_jar() {
         return 1
     fi
 
-    echo "[!] Descargando JAR de OpenCV compatible con Java $JAVA_MAJOR_VERSION..."
-    echo "[!] URL: $url"
+    echo "Descargando JAR de OpenCV compatible con Java $JAVA_MAJOR_VERSION..."
+    echo "URL: $url"
     
     mkdir -p "$(dirname "$target_jar")"
 
@@ -56,10 +56,10 @@ download_opencv_jar() {
     fi
 
     if [ $? -eq 0 ] && [ -f "$target_jar" ]; then
-        echo "[✓] Descarga completada exitosamente en: $target_jar"
+        echo "Descarga completada exitosamente en: $target_jar"
         return 0
     else
-        echo "[✕] Error al descargar el JAR desde la fuente."
+        echo "Error al descargar el JAR desde la fuente."
         return 1
     fi
 }
@@ -67,7 +67,7 @@ download_opencv_jar() {
 pkg_install_opencv() {
     # Si estamos en Java 27+, intentamos reinstalar desde pacman/gestor del sistema
     if [ "$JAVA_MAJOR_VERSION" -ge 27 ]; then
-        echo "[!] Reparando/Reinstalando paquete de OpenCV desde el gestor de paquetes del sistema..."
+        echo "Reparando/Reinstalando paquete de OpenCV desde el gestor de paquetes del sistema..."
         if [ -f /etc/os-release ]; then
             sudo pacman -S --noconfirm --overwrite '*' opencv 2>/dev/null || true
         fi
@@ -85,12 +85,12 @@ pkg_install_opencv() {
 
 check_jar_integrity() {
     if [ ! -f "$OPENCV_JAR" ]; then
-        echo "[!] $OPENCV_JAR no existe en el sistema."
+        echo "$OPENCV_JAR no existe en el sistema."
         return 1
     fi
 
     if ! "$JAVA_HOME/bin/jar" -tf "$OPENCV_JAR" > /dev/null 2>&1; then
-        echo "[!] $OPENCV_JAR está corrupto o es inválido para la herramienta jar en $JAVA_HOME."
+        echo "$OPENCV_JAR está corrupto o es inválido para la herramienta jar en $JAVA_HOME."
         return 1
     fi
 
