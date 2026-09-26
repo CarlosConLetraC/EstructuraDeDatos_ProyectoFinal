@@ -115,7 +115,9 @@ $$Y(x,y) = 0.299 \cdot R(x,y) + 0.587 \cdot G(x,y) + 0.114 \cdot B(x,y)$$
 
 ### 2. Muestreo por Celdas (Reducción de Resolución)
 Dada una celda $C_{k,l}$ de tamaño $w_c \times h_c$, su brillo promedio $\bar{Y}_{k,l}$ se calcula como:
-$$\bar{Y}_{k,l} = \frac{1}{w_c \cdot h_c} \sum_{i=0}^{w_c-1} \sum_{j=0}^{h_c-1} Y(k \cdot w_c + i, \; l \cdot h_c + j)$$
+
+$$\bar{Y}_{k,l} = \frac{1}{w_c \cdot h_c} \sum_{i=0}^{w_c-1} \sum_{j=0}^{h_c-1} Y(k \cdot w_c + i, \, l \cdot h_c + j)$$
+
 - $w_c, h_c$: Ancho y alto de celda en píxeles.
 - $k, l$: Coordenadas del carácter en la matriz final.
 
