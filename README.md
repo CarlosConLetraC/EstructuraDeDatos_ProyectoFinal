@@ -5,10 +5,6 @@
 # Sistema de Procesamiento de Video ASCII en Tiempo Real
 ### *Arquitectura de Backend en C++, Puente JNI y Renderizado Nativo FFmpeg/OpenCV*
 
-- **Equipo No.:** 5
-- **Integrantes:** García Capistrán José Carlos
-- **Profesor:** Rendón Castro Ángel Arturo
-
 ---
 ## 1. Selección de Ruta del Proyecto
 
