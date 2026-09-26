@@ -9,7 +9,7 @@ JAVA="$JAVA_HOME/bin/java"
 # Validar que exista el binario del JDK
 if [ ! -x "$JAVAC" ] || [ ! -x "$JAVA" ]; then
     echo "Error: No se encontró un JDK válido en '$JAVA_HOME'."
-    echo "Asegúrate de que la ruta exista en /opt o usa: JDK_DIR=/opt/tu-jdk jrun ..."
+    echo "Asegúrate de que la ruta exista en /opt o usa: JDK_DIR=/opt/tu-jdk jrun. . ."
     return 1 2>/dev/null || exit 1
 fi
 
@@ -41,7 +41,7 @@ download_opencv_jar() {
         return 1
     fi
 
-    echo "Descargando JAR de OpenCV compatible con Java $JAVA_MAJOR_VERSION..."
+    echo "Descargando JAR de OpenCV compatible con Java $JAVA_MAJOR_VERSION . . ."
     echo "URL: $url"
     
     mkdir -p "$(dirname "$target_jar")"
@@ -67,7 +67,7 @@ download_opencv_jar() {
 pkg_install_opencv() {
     # Si estamos en Java 27+, intentamos reinstalar desde pacman/gestor del sistema
     if [ "$JAVA_MAJOR_VERSION" -ge 27 ]; then
-        echo "Reparando/Reinstalando paquete de OpenCV desde el gestor de paquetes del sistema..."
+        echo "Reparando/Reinstalando paquete de OpenCV desde el gestor de paquetes del sistema . . ."
         if [ -f /etc/os-release ]; then
             sudo pacman -S --noconfirm --overwrite '*' opencv 2>/dev/null || true
         fi
@@ -123,7 +123,7 @@ compress_video() {
     local base="${input%.*}"
     local temp="${base}_temp.${ext}"
 
-    echo "Comprimiendo '$input'..."
+    echo "Comprimiendo '$input' . . ."
     
     ffmpeg -i "$input" -vcodec libx264 -crf 28 -acodec aac -b:a 128k "$temp"
     
@@ -164,7 +164,7 @@ javacompile() {
         return 1
     fi
 
-    echo "Makefile detectado. Compilando C++ y Java (Detectado Java $JAVA_MAJOR_VERSION)..."
+    echo "Makefile detectado. Compilando C++ y Java (Detectado Java $JAVA_MAJOR_VERSION) . . ."
     
     if ! check_jar_integrity; then
         pkg_fetch_and_replace || return 1
@@ -192,7 +192,7 @@ javaexecute() {
     local cp
     cp=$(_get_classpath)
 
-    echo "Ejecutando $1 con JDK $JAVA_MAJOR_VERSION ($JAVA_HOME)..."
+    echo "Ejecutando $1 con JDK $JAVA_MAJOR_VERSION ($JAVA_HOME) . . ."
     echo "Usando JAR de OpenCV: $OPENCV_JAR"
     
     "$JAVA" --enable-native-access=ALL-UNNAMED \
