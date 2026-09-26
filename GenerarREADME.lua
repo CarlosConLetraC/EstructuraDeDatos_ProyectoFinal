@@ -158,7 +158,7 @@ local function build_readme_markdown()
     add_line("  ```cpp")
     add_line("  char c = LUT[Y(x,y)];")
     add_line("  ```")
-    add_line("- **Ganancia de Rendimiento:** Elimina las operaciones de división en punto flotante por cada píxel procesado, sustituyéndolas por una simple lectura en caché L1 ($O(1)$).\n")
+    add_line("- **Ganancia de Rendimiento:** Elimina las operaciones de división en punto flotante por cada píxel procesado, sustituyéndolas por un acceso directo a memoria en tiempo constante $O(1)$.\n")
 
     -- Seccion 10 & 11
     add_line("## 9. Integración de FFmpeg y Remuxing de Audio\n")
