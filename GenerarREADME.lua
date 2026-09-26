@@ -24,9 +24,6 @@ local function build_readme_markdown()
     add_line("---")
     add_line("# Sistema de Procesamiento de Video ASCII en Tiempo Real")
     add_line("### *Arquitectura de Backend en C++, Puente JNI y Renderizado Nativo FFmpeg/OpenCV*\n")
-    add_line("- **Equipo No.:** 5")
-    add_line("- **Integrantes:** García Capistrán José Carlos")
-    add_line("- **Profesor:** Rendón Castro Ángel Arturo\n")
     add_line("---")
 
     -- Seccion 1
