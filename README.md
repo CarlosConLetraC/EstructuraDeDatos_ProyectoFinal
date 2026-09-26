@@ -151,7 +151,7 @@ El cálculo del carácter correspondiente a cada nivel de gris mediante divisió
   ```cpp
   char c = LUT[Y(x,y)];
   ```
-- **Ganancia de Rendimiento:** Elimina las operaciones de división en punto flotante por cada píxel procesado, sustituyéndolas por una simple lectura en caché L1 ($O(1)$).
+- **Ganancia de Rendimiento:** Elimina las operaciones de división en punto flotante por cada píxel procesado, sustituyéndolas por un acceso directo a memoria en tiempo constante $O(1)$.
 
 ## 9. Integración de FFmpeg y Remuxing de Audio
 
