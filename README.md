@@ -120,8 +120,11 @@ $$\bar{Y}_{k,l} = \frac{1}{w_c \cdot h_c} \sum_{i=0}^{w_c-1} \sum_{j=0}^{h_c-1} 
 - $k, l$: Coordenadas del carácter en la matriz final.
 
 ### 3. Mapeo Lineal a Rampa de Caracteres (LUT)
-Sea $S$ una cadena de caracteres ordenada por densidad cromática de menor a mayor (ejemplo: `" .:-=+*%@"`) y $N = ert{}Sert{}$ la cantidad total de caracteres. El índice $idx$ se mapea mediante:
+
+Sea $S$ una cadena de caracteres ordenada por densidad cromática de menor a mayor (ejemplo: `" .:-=+*%@"`) y $N = \vert S \vert$ la cantidad total de caracteres. El índice $idx$ se mapea mediante:
+
 $$idx = \left\lfloor \frac{\bar{Y}_{k,l}}{255} \cdot (N - 1) \right\rfloor$$
+
 $$\text{Carácter asignado} = S[idx]$$
 
 ## 7. Estructuras de Datos Integradas y Complejidad
