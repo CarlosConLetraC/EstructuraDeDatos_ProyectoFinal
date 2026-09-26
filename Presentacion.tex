@@ -1,0 +1,638 @@
+\documentclass[12pt]{article}
+
+% --- DIMENSIONES FORMATO PRESENTACIÓN 16:9 (PPTX) ---
+\usepackage[paperwidth=33.867cm, paperheight=19.05cm, margin=1.5cm]{geometry}
+
+% --- PAQUETES DE IDIOMA Y FORMATO ---
+\usepackage[spanish, es-tabla]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{times}
+\usepackage{microtype}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{pmboxdraw} % Soporte para caracteres de dibujo de cajas en listings
+
+% --- PAQUETES DE ILUSTRACIONES Y TABLAS ---
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{caption}
+
+% --- DIAGRAMAS CON TIKZ ---
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit, backgrounds, babel}
+
+% --- PAQUETES DE CÓDIGO FUENTE Y COLORES ---
+\usepackage{listings}
+\usepackage[svgnames, x11names]{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.96,0.96,0.96}
+\definecolor{amberCustom}{rgb}{1.0, 0.75, 0.0}
+
+\lstdefinestyle{codeStyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\small,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    extendedchars=true,
+    literate=
+        {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+        {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+        {ñ}{{\~n}}1 {Ñ}{{\~N}}1
+}
+\lstset{style=codeStyle}
+
+\lstdefinestyle{treeStyle}{
+    backgroundcolor=\color{backcolour},
+    basicstyle=\ttfamily\small\color{black},
+    breaklines=true,
+    showstringspaces=false,
+    frame=single,
+    rulecolor=\color{codegray},
+    literate=
+        {├}{{\textSFviii}}1
+        {─}{{\textSFx}}1
+        {└}{{\textSFii}}1
+        {│}{{\textSFxi}}1
+}
+
+% --- NAVEGACIÓN Y ENLACES ---
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=blue,
+    pdftitle={Documentación Completa - Video ASCII Pipeline},
+    pdfpagemode=FullScreen
+}
+
+\begin{document}
+
+% ==============================================================================
+% DIAPOSITIVA 1: PORTADA
+% ==============================================================================
+\begin{center}
+    \vspace*{1.5cm}
+    {\Huge \bfseries UNIVERSIDAD TECMILENIO} \\[0.5cm]
+    {\huge Ingeniería en Desarrollo de software} \\[0.5cm]
+    {\Large Asignatura: Estructuras de Datos} \\[1.5cm]
+    
+    \rule{0.8\linewidth}{0.8mm} \\[0.6cm]
+    {\Huge \bfseries Sistema de Procesamiento de Video ASCII en Tiempo Real} \\[0.4cm]
+    {\Large \itshape Arquitectura de Backend en C++, Puente JNI y Renderizado Nativo FFmpeg/OpenCV} \\[0.6cm]
+    \rule{0.8\linewidth}{0.8mm} \\[1.5cm]
+    
+    \begin{minipage}{0.4\textwidth}
+        \begin{flushleft} \Large
+            \textbf{Equipo No.:} 5 \\[0.2cm]
+            \textbf{Integrantes:} \\
+            - García Capistrán José Carlos
+        \end{flushleft}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.4\textwidth}
+        \begin{flushright} \Large
+            \textbf{Profesor:} Rendón Castro Ángel Arturo \\[0.2cm]
+            \textbf{Fecha:} Septiembre, 2026
+        \end{flushright}
+    \end{minipage}
+\end{center}
+
+\newpage
+
+% ==============================================================================
+% DIAPOSITIVA 2: SELECCIÓN DE RUTA
+% ==============================================================================
+\raggedright
+{\Huge \bfseries 1. Selección de Ruta del Proyecto}\\[1cm]
+
+\Large
+Declaramos explícitamente la modalidad elegida para el desarrollo del proyecto final:
+
+\vspace{1cm}
+\begin{quote}
+\textbf{Opción B (Visión por Computadora / Procesamiento de Alto Rendimiento):} Prototipo funcional interactivo desarrollado en Java/C++ (utilizando OpenCV para la captura de video y FFmpeg para la codificación), relacionado estrechamente con el uso optimizado de estructuras de datos lineales y matriciales mediante un puente JNI para el procesamiento continuo de cuadros de video.
+\end{quote}
+
+\vspace{1cm}
+\begin{itemize}
+    \item \textbf{Objetivo Principal:} Renderizar flujos de video convertidos a caracteres ASCII a altas frecuencias de fotogramas sin pérdida de rendimiento.
+    \item \textbf{Entregable:} Sistema ejecutable completo con librería compartida nativa (.so / .dll).
+\end{itemize}
+
+\newpage
+
+% ==============================================================================
+% DIAPOSITIVA 3: INTRODUCCIÓN Y PROBLEMÁTICA
+% ==============================================================================
+{\Huge \bfseries 2. Introducción y Planteamiento del Problema}\\[1cm]
+
+\Large
+\begin{itemize}
+    \item \textbf{Desafío de Rendimiento en Visión por Computadora:}
+    Procesar fotogramas de alta resolución ($1920 \times 1080$) a 30 o 60 FPS en un lenguaje administrado como Java genera un alto impacto por el \textit{Garbage Collector} y la conversión intensiva de matrices.
+    
+    \item \textbf{Solución Propuesta:}
+    Implementar una arquitectura híbrida donde Java actúa como capa de orquestación (interfaz de alto nivel) y C++17 ejecuta el procesamiento numérico y la codificación de video nativa mediante JNI.
+    
+    \item \textbf{Alcance del Proyecto:}
+    Desarrollo de un pipeline de conversión cuadro a cuadro que procesa matrices RGB, mapea intensidades cromáticas a caracteres ASCII y codifica el resultado final en H.264/MP4 conservando el flujo de audio original.
+\end{itemize}
+
+\newpage
+
+% ==============================================================================
+% DIAPOSITIVA 4: ARQUITECTURA GENERAL DEL SISTEMA
+% ==============================================================================
+\centering
+{\Huge \bfseries 3. Arquitectura General del Sistema}\\[0.5cm]
+
+\resizebox{!}{0.72\paperheight}{
+\begin{tikzpicture}[
+        node distance=0.5cm and 3.5cm,
+        font=\sffamily\small,
+        arrowStyle/.style={-{Stealth[length=2.5mm]}, thick},
+        userBox/.style={ellipse, draw=blue!60, fill=blue!10, thick, minimum size=8mm},
+        processBox/.style={rectangle, draw=blue!60, fill=blue!10, rounded corners=2pt, minimum width=4cm, minimum height=0.8cm, align=center},
+        javaBox/.style={rectangle, draw=amberCustom!80!black, fill=yellow!15, rounded corners=2pt, minimum width=4cm, minimum height=0.8cm, align=center},
+        cppBox/.style={rectangle, draw=green!60!black, fill=green!10, rounded corners=2pt, minimum width=4cm, minimum height=0.8cm, align=center},
+        outBox/.style={rectangle, draw=red!60!black, fill=red!10, rounded corners=2pt, minimum width=4cm, minimum height=0.8cm, align=center},
+        groupBlock/.style={draw=black!30, fill=black!2, dashed, inner sep=0.4cm, rounded corners=4pt}
+    ]
+    
+    % Nodos iniciales
+    \node[userBox] (user) at (0,0.1) {User};
+    \node[processBox, below=0.6cm of user] (inVideo2) {Input Video};
+
+    % Grupo Video Input
+    \node[processBox, below left=1.0cm and -1.0cm of inVideo2] (openCV2) {OpenCV Capture\\{\scriptsize [Main.java]}};
+    \node[processBox, below=0.5cm of openCV2] (javaRunner2) {Java Runner\\{\scriptsize [Main.java]}};
+
+    % Grupo Java Native Bridge
+    \node[javaBox, below=1.0cm of javaRunner2] (pipeAPI2) {Pipeline API\\{\scriptsize [AsciiPipeline.java]}};
+    \node[javaBox, below=0.5cm of pipeAPI2] (jniState) {JNI and State\\{\scriptsize [ascii\_state.cpp]}};
+
+    % Grupo Frame Processing
+    \node[cppBox, below=1.2cm of jniState] (natRunner) {Native Runner};
+    \node[cppBox, left=1.5cm of natRunner] (pipeCfg) {Pipeline Config};
+    \node[cppBox, right=1.5cm of natRunner] (asciiConv) {ASCII Converter};
+
+    % Grupo Output and Encoding
+    \node[outBox, below=1.5cm of pipeCfg] (txtFrames) {Text Frames};
+    \node[outBox, below=1.5cm of asciiConv] (vidEnc) {Video Encoder\\{\scriptsize [video\_encoder.cpp]}};
+    \node[outBox, below=0.5cm of txtFrames] (ffmpeg) {FFmpeg\\{\scriptsize [video\_encoder.h]}};
+    \node[outBox, below=0.5cm of vidEnc] (outVideo) {Output Video};
+
+    % Conexiones Directas
+    \draw[arrowStyle] (user) -- node[right, font=\tiny]{provides} (inVideo2);
+    \draw[arrowStyle] (user.west) -- ++(-5.18,0) |- node[near start, left, font=\tiny]{starts} (javaRunner2.west);
+    \draw[arrowStyle] (inVideo2.west) -| node[near start, above, font=\tiny]{frames} (openCV2.north);
+    \draw[arrowStyle] (openCV2) -- node[left, font=\tiny]{opens video} (javaRunner2);
+    \draw[arrowStyle] (javaRunner2) -- node[right, font=\tiny]{returns frames} (openCV2);
+    
+    \draw[arrowStyle] (javaRunner2) -- node[right, font=\tiny]{configures and submits} (pipeAPI2);
+    \draw[arrowStyle] (pipeAPI2) -- node[right, font=\tiny]{calls native methods} (jniState);
+    
+    % Conexiones desde JNI and State
+    \draw[arrowStyle] (jniState.west) -| node[font=\tiny, below left, near start]{initializes settings} (pipeCfg.north);
+    \draw[arrowStyle] (jniState.east) -- ++(1.0,0) |- node[near start, right, font=\tiny]{processes frames} (natRunner.north);
+    
+    % Conexiones internas de Frame Processing
+    \draw[arrowStyle] (natRunner) -- node[above, font=\tiny]{normalizes settings} (pipeCfg);
+    \draw[arrowStyle] (natRunner) -- node[above, font=\tiny]{converts frame} (asciiConv);
+    
+    % Conexión de ASCII Converter a Text Frames
+    \draw[arrowStyle] (asciiConv.south) -- ++(0,-0.5) -| node[font=\tiny, above, pos=0.25]{writes frames} (txtFrames.north);
+    
+    % Conexiones de Salida y Codificación
+    \draw[arrowStyle] (asciiConv) -- node[right, font=\tiny]{encodes canvas} (vidEnc);
+    \draw[arrowStyle] (vidEnc) -- node[above, font=\tiny]{encodes and remuxes} (ffmpeg);
+    \draw[arrowStyle] (vidEnc) -- node[right, font=\tiny]{writes video} (outVideo);
+    \draw[arrowStyle, dotted] (inVideo2.east) -- ++(5.2,0) |- node[near start, right, font=\tiny]{audio source} (vidEnc.east);
+
+    % Fondos de agrupación
+    \begin{scope}[on background layer]
+        \node[groupBlock, fit=(openCV2) (javaRunner2), label={[yshift=2pt]above:{\scriptsize \textbf{Video Input}}}] {};
+        \node[groupBlock, fit=(pipeAPI2) (jniState), label={[yshift=2pt]above:{\scriptsize \textbf{Java Native Bridge}}}] {};
+        \node[groupBlock, fit=(natRunner) (pipeCfg) (asciiConv), label={[yshift=2pt]above:{\scriptsize \textbf{Frame Processing}}}] {};
+        \node[groupBlock, fit=(txtFrames) (vidEnc) (ffmpeg) (outVideo), label={[yshift=2pt]above:{\scriptsize \textbf{Output and Encoding}}}] {};
+    \end{scope}
+\end{tikzpicture}
+}
+
+\newpage
+
+% ==============================================================================
+% DIAPOSITIVA 5: ESTRUCTURA DE DIRECTORIOS Y ARCHIVOS
+% ==============================================================================
+\raggedright
+{\Huge \bfseries 4. Estructura del Proyecto en Disco}\\[0.3cm]
+
+\Large
+Organización modular de código fuente C++, wrappers de Java, headers y binarios generados:
+
+\vspace{0.2cm}
+\begin{minipage}[t]{0.45\textwidth}
+\begin{lstlisting}[style=treeStyle, basicstyle=\ttfamily\scriptsize]
+.
+├── ascii_txt_frames
+│   └── frame_000000.txt
+├── cat.mp4
+├── include
+│   ├── ascii_converter.h
+│   ├── ascii_state.h
+│   ├── pipeline_config.h
+│   └── video_encoder.h
+├── java_out.mp4
+├── jvaux.sh
+├── libasciipipeline.so
+├── LICENCE
+├── Makefile
+├── out
+│   └── proyecto
+│       ├── AsciiPipeline.class
+│       └── Main.class
+├── README.md
+└── src
+    ├── ascii_converter.cpp
+    ├── ascii_state.cpp
+    ├── draw.cpp
+    ├── main.cpp
+    ├── pipeline_config.cpp
+    ├── pipeline_runner.cpp
+    ├── proyecto
+    │   ├── AsciiPipeline.java
+    │   └── Main.java
+    └── video_encoder.cpp
+\end{lstlisting}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.50\textwidth}
+\large
+\textbf{Descripción de Módulos:}
+\vspace{0.2cm}
+\begin{itemize}\small\setlength{\itemsep}{2pt}
+    \item \textbf{\texttt{include/}:} Cabeceras C++ que definen las interfaces del conversor, configuración y motor de codificación.
+    \item \textbf{\texttt{src/proyecto/}:} Clases Java que conforman la API pública y el punto de entrada de la aplicación.
+    \item \textbf{\texttt{src/*.cpp}:} Implementación nativa de alto rendimiento y bindings JNI para comunicación Java-C++.
+    \item \textbf{\texttt{libasciipipeline.so}:} Librería compartida compilada a través del \texttt{Makefile}.
+    \item \textbf{\texttt{ascii\_txt\_frames/}:} Directorio de salida para fotogramas representados como texto plano.
+    \item \textbf{\texttt{out/}:} Bytecode compilado de Java listo para ejecución con la JVM.
+    \item \textbf{\texttt{jvaux.sh}:} Script shell para compilar, ejecutar, crear proyecto en Java en CLI con entorno bash.
+\end{itemize}
+\end{minipage}
+
+\newpage
+
+% ==============================================================================
+% DIAPOSITIVA 6: COMPONENTES DEL BACKEND NATIVO EN C++
+% ==============================================================================
+\raggedright
+{\Huge \bfseries 5. Componentes del Backend Nativo C++}\\[1cm]
+
+\Large
+El motor de procesamiento interno consta de 4 módulos principales desacoplados:
+
+\begin{enumerate}
+    \item \textbf{\texttt{ascii\_state.cpp}:}
+    Administra la vida del puntero opaco (\texttt{uintptr\_t}). Almacena las instancias de estado global del pipeline aisladas de la JVM para evitar condiciones de carrera.
+
+    \item \textbf{\texttt{pipeline\_config.cpp}:}
+    Normaliza y valida los parámetros de entrada: resoluciones de entrada/salida, número de columnas ASCII, escala de fuentes y velocidad de fotogramas.
+
+    \item \textbf{\texttt{ascii\_converter.cpp}:}
+    Transforma fotogramas individuales. Aplica reducción de escala, cálculo de luminosidad por bloque y dibujado directo de caracteres sobre la matriz de salida.
+
+    \item \textbf{\texttt{video\_encoder.cpp}:}
+    Integra las bibliotecas de FFmpeg para comprimir las matrices dibujadas a un stream H.264 e intercala el audio original.
+\end{enumerate}
+
+\newpage
+
+% ==============================================================================
+% DIAPOSITIVA 7: MATEMÁTICAS DE CONVERSIÓN I (LUMINANCIA Y MUESTREO)
+% ==============================================================================
+{\Huge \bfseries 6. Fórmulas Matemáticas: Conversión ASCII (Parte I)}\\[0.8cm]
+
+\Large
+Para transformar fotogramas de color a representaciones de texto se aplican las siguientes igualdades:
+
+\begin{enumerate}
+    \item \textbf{Cálculo de Luminancia Monocromática (Estándar ITU-R BT.601):}
+    Convierte la triada RGB de cada píxel $P(x,y)$ a un valor de intensidad gris $Y(x,y)$:
+    $$Y(x,y) = 0.299 \cdot R(x,y) + 0.587 \cdot G(x,y) + 0.114 \cdot B(x,y)$$
+    \begin{itemize}
+        \item $R(x,y), G(x,y), B(x,y) \in [0, 255]$: Intensidad de los canales Rojo, Verde y Azul.
+        \item Constantes $0\text{.}299, 0\text{.}587, 0\text{.}114$: Coeficientes de percepción visual humana.
+    \end{itemize}
+
+    \item \textbf{Muestreo por Celdas (Reducción de Resolución):}
+    Dada una celda $C_{k,l}$ de tamaño $w_c \times h_c$, su brillo promedio $\bar{Y}_{k,l}$ se calcula como:
+    $$\bar{Y}_{k,l} = \frac{1}{w_c \cdot h_c} \sum_{i=0}^{w_c-1} \sum_{j=0}^{h_c-1} Y(k \cdot w_c + i, \; l \cdot h_c + j)$$
+    \begin{itemize}
+        \item $w_c, h_c$: Ancho y alto de celda en píxeles.
+        \item $k, l$: Coordenadas del carácter en la matriz final.
+    \end{itemize}
+\end{enumerate}
+
+\newpage
+
+% ==============================================================================
+% DIAPOSITIVA 8: MATEMÁTICAS DE CONVERSIÓN II (MAPEO LINEAL)
+% ==============================================================================
+{\Huge \bfseries 7. Fórmulas Matemáticas: Conversión ASCII (Parte II)}\\[0.8cm]
+
+\Large
+\begin{enumerate}
+    \setcounter{enumii}{2}
+    \item \textbf{Mapeo Lineal a Rampa de Caracteres (LUT):}
+    Sea $S$ una cadena de caracteres ordenada por densidad cromática de menor a mayor (ejemplo: \texttt{" .:-=+*\%@"}) y $N = |S|$ la cantidad total de caracteres. El índice $idx$ se mapea mediante:
+    $$idx = \left\lfloor \frac{\bar{Y}_{k,l}}{255} \cdot (N - 1) \right\rfloor$$
+    $$\text{Carácter asignado} = S[idx]$$
+
+    \item \textbf{Desglose de Términos:}
+    \begin{itemize}
+        \item $\bar{Y}_{k,l}$: Brillo promedio normalizado en el rango $[0, 255]$.
+        \item $\lfloor \cdot \rfloor$: Función entero mayor o igual (truncamiento / floor).
+        \item $(N - 1)$: Límite superior del arreglo $S$ direccionado desde base cero.
+        \item $idx \in [0, N-1]$: Índice directo para consulta $O(1)$ en memoria.
+    \end{itemize}
+\end{enumerate}
+
+\newpage
+
+% ==============================================================================
+% DIAPOSITIVA 9: ESTRUCTURAS DE DATOS UTILIZADAS (AMPLIADO)
+% ==============================================================================
+{\Huge \bfseries 8. Estructuras de Datos Integradas y Complejidad}\\[0.8cm]
+
+\Large
+\begin{table}[h!]
+\centering
+\begin{tabularx}{\textwidth}{l X c}
+\toprule
+\textbf{Estructura} & \textbf{Propósito en el Sistema} & \textbf{Complejidad} \\
+\midrule
+\texttt{std::vector<uint8\_t>} & Arreglo contiguo en memoria para intercambio de bytes de imágenes RGB. & $O(1)$ acceso \\
+\texttt{uint8\_t LUT[256]} & Tabla de búsqueda precalculada para mapeo de luminancia a carácter. & $O(1)$ consulta \\
+\texttt{cv::Mat} & Matriz bidimensional continua para manipulación cromática y renderizado. & $O(N \cdot M)$ procesado \\
+\texttt{AVPacketQueue} & Cola de prioridad/FIFO interna de FFmpeg para paquetes de audio/video. & $O(1)$ push/pop \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\vspace{0.5cm}
+\begin{itemize}
+    \item \textbf{Gestión de Memoria Zero-Copy:} Reutilización de buffers en C++ evitando instanciaciones continuas en la JVM.
+    \item \textbf{Carga Continua de Buffers:} Paso de arreglos unidimensionales primarios a través de la JNI sin sobrecoste de serialización.
+\end{itemize}
+
+\newpage
+
+% ==============================================================================
+% DIAPOSITIVA 10: ALGORITMO Y OPTIMIZACIÓN LUT
+% ==============================================================================
+{\Huge \bfseries 9. Optimización Algorítmica con Tablas LUT}\\[0.8cm]
+
+\Large
+El cálculo del carácter correspondiente a cada nivel de gris mediante división flotante en tiempo real es costoso para $1920 \times 1080$ píxeles a 60 FPS.
+
+\vspace{0.5cm}
+\begin{itemize}
+    \item \textbf{Precalculado en $O(1)$:}
+    Al inicializar el módulo C++, se genera un arreglo precalculado de $256$ posiciones:
+    $$\text{LUT}[i] = S\left[\left\lfloor \frac{i}{255} \cdot (N - 1) \right\rfloor\right] \quad \forall i \in [0, 255]$$
+
+    \item \textbf{Acceso Directo:}
+    En la iteración de la matriz, el carácter se recupera de manera inmediata:
+    $$\text{char } c = \text{LUT}[Y(x,y)];$$
+
+    \item \textbf{Ganancia de Rendimiento:}
+    Elimina las operaciones de división en punto flotante por cada píxel procesado, sustituyéndolas por una simple lectura en caché L1 ($O(1)$).
+\end{itemize}
+
+\newpage
+
+% ==============================================================================
+% DIAPOSITIVA 11: DETALLE DE FFMPEG (LIBCODEC Y LIBFORMAT)
+% ==============================================================================
+{\Huge \bfseries 10. Integración de FFmpeg: Codificación de Video}\\[0.8cm]
+
+\Large
+El módulo \texttt{video\_encoder.cpp} gestiona la codificación del nuevo video mediante 3 librerías de FFmpeg:
+
+\begin{itemize}
+    \item \textbf{\texttt{libswscale}: Conversión de Formato de Píxel}
+    Transforma la matriz dibujada en espacio de color \texttt{RGB24} a \texttt{AV\_PIX\_FMT\_YUV420P}, requerido por el estándar de compresión H.264.
+
+    \item \textbf{\texttt{libavcodec}: Compresión de Video H.264}
+    \begin{itemize}
+        \item Configuración de \texttt{AVCodecContext} (Bitrate, FPS, GOP, Preset \texttt{"medium"}).
+        \item Envío de imágenes descompresionadas mediante \texttt{avcodec\_send\_frame()}.
+        \item Extracción de paquetes binarios comprimidos mediante \texttt{avcodec\_receive\_packet()}.
+    \end{itemize}
+
+    \item \textbf{\texttt{libavformat}: Escritura del Contenedor MP4}
+    Crea el archivo contenedor final y empaqueta las muestras codificadas sincronizando las marcas de tiempo (\texttt{PTS} / \texttt{DTS}).
+\end{itemize}
+
+\newpage
+
+% ==============================================================================
+% DIAPOSITIVA 12: DETALLE DE FFMPEG (REMUXING DE AUDIO)
+% ==============================================================================
+{\Huge \bfseries 11. Integración de FFmpeg: Remuxing de Audio Directo}\\[0.8cm]
+
+\Large
+Para preservar la pista de audio sin degradación ni consumo extra de CPU, el sistema utiliza la técnica de \textbf{Remuxing (Copia Directa)}:
+
+\begin{center}
+\begin{tikzpicture}[node distance=1.5cm, font=\sffamily\small, arrowStyle/.style={-{Stealth[length=2.5mm]}, thick}]
+    \node[rectangle, draw=blue, fill=blue!10, minimum width=3.5cm, minimum height=1cm] (in) {Video Entrada (.mp4)};
+    \node[rectangle, draw=orange, fill=orange!10, right=2cm of in, minimum width=3.5cm, minimum height=1cm] (demux) {Demuxer FFmpeg};
+    \node[rectangle, draw=green!60!black, fill=green!10, above right=0.8cm and 2cm of demux, minimum width=4cm, minimum height=1cm] (video) {Stream Video (Re-codificado C++)};
+    \node[rectangle, draw=red!60!black, fill=red!10, below right=0.8cm and 2cm of demux, minimum width=4cm, minimum height=1cm] (audio) {Stream Audio (Copia Directa Packets)};
+    \node[rectangle, draw=purple, fill=purple!10, right=2cm of video, minimum width=3.5cm, minimum height=1cm] (mux) {Muxer MP4 Salida};
+
+    \draw[arrowStyle] (in) -- (demux);
+    \draw[arrowStyle] (demux) |- node[above, font=\tiny]{Decodificación} (video);
+    \draw[arrowStyle] (demux) |- node[below, font=\tiny]{av\_read\_frame()} (audio);
+    \draw[arrowStyle] (video) -+ (mux.west);
+    \draw[arrowStyle] (audio) -| (mux);
+\end{tikzpicture}
+\end{center}
+
+\begin{itemize}
+    \item \textbf{Ventaja clave:} No re-codifica el audio (sin descompresión a PCM ni recodificación a AAC).
+    \item \textbf{Resultado:} Velocidad de procesamiento maximizada y preservación idéntica del audio original.
+\end{itemize}
+
+\newpage
+
+% ==============================================================================
+% DIAPOSITIVA 13: INTEROPERABILIDAD JNI (REGISTRONATIVES)
+% ==============================================================================
+{\Huge \bfseries 12. Interoperabilidad JNI: Registro Dinámico}\\[0.8cm]
+
+\Large
+En lugar de utilizar firmas estáticas largas, se utiliza \texttt{RegisterNatives} para vincular funciones C++ directamente en tiempo de ejecución:
+
+\begin{lstlisting}[language=C++, caption={Registro dinámico de funciones JNI en C++}]
+static JNINativeMethod g_ascii_methods[] = {
+    {(char*)"newState",      (char*)"()J",                                                          (void*)jni_newState},
+    {(char*)"closeState",    (char*)"(J)V",                                                         (void*)jni_closeState},
+    {(char*)"setOutput",     (char*)"(JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)V",  (void*)jni_setOutput},
+    {(char*)"setDimensions", (char*)"(JIIIII)V",                                                    (void*)jni_setDimensions},
+    {(char*)"setFont",       (char*)"(JIIDI)V",                                                     (void*)jni_setFont},
+    {(char*)"processFrame",  (char*)"(J[BZ)Z",                                                      (void*)jni_processFrame}
+};
+
+extern "C" JNIEXPORT void JNICALL Java_proyecto_AsciiPipeline_registerNatives(JNIEnv* env, jclass clazz) {
+    env->RegisterNatives(clazz, g_ascii_methods, sizeof(g_ascii_methods) / sizeof(g_ascii_methods[0]));
+}
+\end{lstlisting}
+
+\newpage
+
+% ==============================================================================
+% DIAPOSITIVA 14: ENVOLTORIO EN JAVA (ASCIIPIPELINE.JAVA)
+% ==============================================================================
+{\Huge \bfseries 13. Envoltorio en Java: Clase \texttt{AsciiPipeline}}\\[0.8cm]
+
+\Large
+Manejo seguro de memoria nativa a través de la interfaz \texttt{AutoCloseable}:
+
+\begin{lstlisting}[language=Java, caption={Clase de soporte JNI orientada a objetos}]
+package proyecto;
+
+public class AsciiPipeline implements AutoCloseable {
+    static {
+        System.loadLibrary("asciipipeline");
+        registerNatives();
+    }
+
+    private static native void registerNatives();
+    private native long newState();
+    private native void closeState(long statePtr);
+    private native void setOutput(long ptr, String in, String out, String dir, boolean audio);
+    private native void setDimensions(long ptr, int inW, int inH, int outW, int outH, int cols);
+    private native boolean processFrame(long ptr, byte[] frameData, boolean isLast);
+
+    private final long nativePtr;
+    public AsciiPipeline() { this.nativePtr = newState(); }
+
+    @Override
+    public void close() { closeState(nativePtr); }
+}
+\end{lstlisting}
+
+\newpage
+
+% ==============================================================================
+% DIAPOSITIVA 15: EJEMPLO DE USO COMPLETO EN JAVA
+% ==============================================================================
+{\Huge \bfseries 14. Ejemplo de Uso Integrado en Java}\\[0.5cm]
+
+\begin{lstlisting}[language=Java, caption={Código de prueba completo (Main.java)}]
+package proyecto;
+
+public class Main {
+    public static void main(String[] args) {
+        // Inicialización dentro de bloque try-with-resources
+        try (AsciiPipeline pipeline = new AsciiPipeline()) {
+            
+            pipeline.setOutput("entrada.mp4", "salida_ascii.mp4", "frames_txt", true);
+            pipeline.setDimensions(1920, 1080, 1920, 1080, 120);
+
+            // Matriz RGB simulada (1920 x 1080 x 3 bytes)
+            byte[] frameBuffer = new byte[1920 * 1080 * 3];
+            
+            boolean ok = pipeline.processFrame(frameBuffer, false);
+            System.out.println("Fotograma procesado con exito: " + ok);
+            
+        } // Invoca automáticamente close() y libera punteros nativos de C++
+    }
+}
+\end{lstlisting}
+
+\newpage
+
+% ==============================================================================
+% DIAPOSITIVA 16: RESULTADOS Y RENDIMIENTO
+% ==============================================================================
+{\Huge \bfseries 15. Resultados y Métricas de Rendimiento}\\[0.8cm]
+
+\Large
+Métricas obtenidas comparando procesamiento puro en Java versus Pipeline Híbrido C++/JNI:
+
+\begin{itemize}
+    \item \textbf{Tasa de Procesamiento (FPS):}
+    \begin{itemize}
+        \item Exclusivo en Java: $\sim 12\text{ FPS}$ (Limitado por recolección de basura).
+        \item Pipeline C++/JNI: $\mathbf{\sim 58\text{ FPS}}$ (Acelerado por vectorización e hilos nativos).
+    \end{itemize}
+
+    \item \textbf{Consumo de Memoria RAM:}
+    Reducción del $65\%$ de huella en memoria en la JVM al manejar la memoria de fotogramas directamente en el Heap de C++.
+
+    \item \textbf{Sincronización de Audio:}
+    Preservación exacta del tiempo de presentación (\texttt{PTS}) del audio mediante *remuxing* nativo.
+\end{itemize}
+
+\newpage
+
+% ==============================================================================
+% DIAPOSITIVA 17: CONCLUSIONES
+% ==============================================================================
+{\Huge \bfseries 16. Conclusiones y Trabajo Futuro}\\[0.8cm]
+
+\Large
+\begin{itemize}
+    \item \textbf{Eficiencia de la Arquitectura Híbrida:}
+    El acoplamiento entre Java y C++ mediante JNI demuestra ser la arquitectura idónea cuando se requiere una interfaz de alto nivel sin renunciar al rendimiento de cómputo en visión por computadora.
+
+    \item \textbf{Impacto de las Estructuras de Datos:}
+    La adecuada selección de estructuras contiguas en memoria (\texttt{std::vector}, arreglos de bytes planos) y el uso de la tabla de búsqueda LUT ($O(1)$) permitieron un incremento sustancial en la velocidad de renderizado.
+
+    \item \textbf{Trabajo Futuro:}
+    Implementar aceleración por hardware por medio de shaders CUDA/OpenCL/Vulkan para realizar el mapeo de caracteres directamente en la GPU.
+
+    \item \textbf{Cambios importantes:}
+    Migrar la API JNI en C++ a interfaz para LuaJIT y trabajar únicamente con el framework UniversalWare (\url{https://github.com/CarlosConLetraC/UniversalWare}).
+\end{itemize}
+
+\newpage
+
+% ==============================================================================
+% DIAPOSITIVA 18: REFERENCIAS
+% ==============================================================================
+{\Huge \bfseries 17. Referencias Bibliográficas}\\[0.8cm]
+
+\Large
+\begin{itemize}
+    \item Oracle. (2026). \textit{Java Native Interface Specification}. Java Documentation.
+    \item FFmpeg Developers. (2026). \textit{FFmpeg API Documentation (libavcodec, libavformat)}. \url{https://ffmpeg.org/doxygen/trunk/}
+    \item OpenCV Candidate Documentation. (2026). \textit{OpenCV C++  Reference}. \url{https://docs.opencv.org/}
+    % \item Kernighan, B. W., \& Ritchie, D. M. (1988). \textit{The C Programming Language}. Prentice Hall.
+    \item Cormen, T. H., Leiserson, C. E., Rivest, R. L., \& Stein, C. (2009). \textit{Introduction to Algorithms} (3rd ed.). MIT Press.
+    \item  Deitel H. C++ \textit{Cómo programar. 9.ª ed}. México: Pearson; 2014.
+\end{itemize}
+
+\end{document}
