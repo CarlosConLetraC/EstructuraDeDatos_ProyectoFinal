@@ -3,6 +3,7 @@ ascii_txt_frames*/
 *.so
 bin/
 build/
+lib/
 *out*
 bad*
 *result*
