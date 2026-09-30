@@ -46,10 +46,10 @@ int main(int argc, char** argv) {
     config.asciiCols = targetCols;
 
     // Ancho de la celda en px según la resolución del video
-    int calculatedCellW = static_cast<int>(std::max(1, videoWidth / config.asciiCols)) * 3;
+    int calculatedCellW = static_cast<int>(std::max(1, videoWidth / config.asciiCols));
 
     // Altura de la celda (relación de aspecto típica de caracteres monospaciados 1:1.8)
-    int calculatedCellH = static_cast<int>(calculatedCellW * 1.8) * 3;
+    int calculatedCellH = static_cast<int>(calculatedCellW * 1.8);
     if (calculatedCellH < 1) calculatedCellH = 1;
 
     // fontScale proporcional al tamaño de la celda con cellW = 8px
