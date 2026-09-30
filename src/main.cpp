@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
     pipeline_new_config(&config);
 
     // Permitir sobreescribir asciiCols opcionalmente por argumento de CLI
-    int targetCols = (argc >= 3) ? std::atoi(argv[2]) : 200;
+    int targetCols = (argc > 4) ? std::atoi(argv[4]) : 200;
     if (targetCols <= 0) targetCols = 200;
 
     /* CALCULO DINAMICO DE CELDAS Y FUENTE. . . */
@@ -60,8 +60,8 @@ int main(int argc, char** argv) {
     int calculatedThickness = (calculatedCellW > 16) ? 2 : 1;
 
     config.inputFile = inputVideo.c_str();
-    config.outputFile = argc > 2 ? argv[2] : "test_native_out.mp4";
-    config.txtOutputDir = argc > 3 ? argv[3] : "ascii_txt_frames";
+    config.outputFile = (argc > 2) ? argv[2] : "test_native_out.mp4";
+    config.txtOutputDir = (argc > 3) ? argv[3] : "ascii_txt_frames";
     config.asciiCharset = "!?@$%#mMqpdb^0123456789*+=-:;.,/()[\\]<=>'\"{|}~`_ ";
     config.fps = fps;
     config.inW = videoWidth;
