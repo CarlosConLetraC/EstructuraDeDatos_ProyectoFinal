@@ -8,6 +8,8 @@ import org.opencv.videoio.Videoio;
 import static java.lang.System.out;
 import static java.lang.System.err;
 
+// video de prueba usado: https://www.youtube.com/watch?v=ocWgSgMGxOc
+
 public class Main {
     static {
         // Carga robusta de la biblioteca nativa de OpenCV

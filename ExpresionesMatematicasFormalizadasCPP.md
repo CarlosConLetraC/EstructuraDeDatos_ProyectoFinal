@@ -12,6 +12,87 @@ cv::cvtColor(inputMat, grayMat, cv::COLOR_RGB2GRAY);
 ```
 * **Mapeo:** La función `cv::cvtColor(..., cv::COLOR_RGB2GRAY)` aplica internamente la fórmula ponderada de luma $Y(x,y)$ de la norma ITU-R BT.601 en punto fijo sobre toda la matriz del fotograma.
 
+Ejemplo crudo en C++:
+```cpp
+#include <iostream>
+#include <vector>
+#include <cstdint>
+#include <algorithm>
+
+// Estructura básica para representar un píxel en formato RGB (24 bits)
+struct PixelRGB {
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
+};
+
+/**
+ * Convierte un único píxel RGB a escala de grises mediante la fórmula ponderada Luma (ITU-R BT.601).
+ * 
+ * Fórmula: Y(x,y) = 0.299 * R(x,y) + 0.587 * G(x,y) + 0.114 * B(x,y)
+ * 
+ * @param pixel Píxel de entrada en formato RGB.
+ * @return Valor escalar de luminancia Y en el rango [0, 255].
+ */
+uint8_t convertirPixelAGris(const PixelRGB& pixel) {
+    // Cálculo en precisión flotante
+    double y = 0.299 * pixel.r + 0.587 * pixel.g + 0.114 * pixel.b;
+    
+    // Asignación con truncamiento/cast explícito y clamp de seguridad [0, 255]
+    return static_cast<uint8_t>(std::clamp(y, 0.0, 255.0));
+}
+
+/**
+ * Convierte un buffer/matriz 1D de píxeles RGB a escala de grises.
+ * 
+ * @param rgbInput Vector continuo de píxeles RGB de entrada.
+ * @param ancho Ancho de la imagen (columnas).
+ * @param alto Alto de la imagen (filas).
+ * @return Vector 1D con la matriz de grises Y resultante.
+ */
+std::vector<uint8_t> convertirImagenAGris(const std::vector<PixelRGB>& rgbInput, int ancho, int alto) {
+    std::vector<uint8_t> grayOutput(ancho * alto);
+
+    for (int y = 0; y < alto; ++y) {
+        for (int x = 0; x < ancho; ++x) {
+            int index = y * ancho + x; // Conversión de coordenadas 2D (x, y) a índice 1D
+            grayOutput[index] = convertirPixelAGris(rgbInput[index]);
+        }
+    }
+
+    return grayOutput;
+}
+
+/**
+ * Versión optativa optimizada en punto fijo (Fixed-Point Arithmetic) sin punto flotante.
+ * Multiplica coeficientes por 2^16 (65536) y desplaza a la derecha 16 bits para máximo rendimiento.
+ */
+uint8_t convertirPixelAGrisPuntoFijo(const PixelRGB& pixel) {
+    // 0.299 * 65536 ≈ 19595
+    // 0.587 * 65536 ≈ 38470
+    // 0.114 * 65536 ≈ 7471
+    uint32_t y = (19595 * pixel.r + 38470 * pixel.g + 7471 * pixel.b) >> 16;
+    return static_cast<uint8_t>(y);
+}
+
+int main() {
+    // Ejemplo de uso
+    PixelRGB pixelPrueba{255, 128, 64}; // R=255, G=128, B=64
+
+    uint8_t grisFlotante = convertirPixelAGris(pixelPrueba);
+    uint8_t grisPuntoFijo = convertirPixelAGrisPuntoFijo(pixelPrueba);
+
+    std::cout << "Píxel original RGB: (" 
+              << static_cast<int>(pixelPrueba.r) << ", " 
+              << static_cast<int>(pixelPrueba.g) << ", " 
+              << static_cast<int>(pixelPrueba.b) << ")\n";
+              
+    std::cout << "Valor Y (Punto Flotante) : " << static_cast<int>(grisFlotante) << "\n";
+    std::cout << "Valor Y (Punto Fijo)     : " << static_cast<int>(grisPuntoFijo) << "\n";
+
+    return 0;
+}
+```
 ---
 
 ### 2. Muestreo por Celdas (Reducción de Resolución)
@@ -35,6 +116,58 @@ cv::resize(grayMat, smallGray, cv::Size(asciiCols, asciiRows), 0, 0, cv::INTER_A
 
 * **Mapeo:** `cv::INTER_AREA` re-muestrea la imagen de entrada sumando y dividiendo exactamente el valor de todos los píxeles contenidos dentro del área de la celda proyectada ($w_c \times h_c$), produciendo la matriz `smallGray` en la que cada celda $(r, c)$ contiene el valor escalar promedio $\bar{Y}_{k,l} \in [0, 255]$.
 
+Ejemplo de mapeo crudo en C++:
+```cpp
+#include <vector>
+#include <cstddef>
+
+/**
+ * Calcula el valor promedio Y_bar_k_l para un bloque/celda específico de una imagen en escala de grises.
+ *
+ * @param Y Matriz/Imagen 2D representada como un std::vector<std::vector<double>>
+ * @param k Índice de fila del bloque/celda
+ * @param l Índice de columna del bloque/celda
+ * @param w_c Ancho de la celda (width)
+ * @param h_c Alto de la celda (height)
+ * @return Valor promedio escalar Y_bar_{k,l}
+ */
+double calcularYBar(const std::vector<std::vector<double>>& Y, int k, int l, int w_c, int h_c) {
+    double suma = 0.0;
+
+    // Sumatoria doble: i de 0 a w_c - 1, j de 0 a h_c - 1
+    for (int i = 0; i < w_c; ++i) {
+        for (int j = 0; j < h_c; ++j) {
+            int x = k * w_c + i;
+            int y = l * h_c + j;
+            suma += Y[x][y];
+        }
+    }
+
+    // Multiplicación por 1 / (w_c * h_c)
+    return suma / (w_c * h_c);
+}
+```
+---
+```cpp
+// Alternativa:
+#include <vector>
+
+double calcularYBarPlano(const std::vector<double>& Y, int anchoImagen, int k, int l, int w_c, int h_c) {
+    double suma = 0.0;
+
+    for (int i = 0; i < w_c; ++i) {
+        for (int j = 0; j < h_c; ++j) {
+            int x = k * w_c + i;
+            int y = l * h_c + j;
+            // Conversión de coordenadas 2D (x, y) a índice 1D
+            suma += Y[y * anchoImagen + x];
+        }
+    }
+
+    return suma / (w_c * h_c);
+}
+```
+###
 ---
 
 ### 3. Mapeo Lineal a Rampa de Caracteres (LUT) y Selección del Carácter
