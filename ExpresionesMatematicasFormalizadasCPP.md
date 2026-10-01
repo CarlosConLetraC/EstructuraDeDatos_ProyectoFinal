@@ -85,10 +85,10 @@ int main() {
     std::cout << "Píxel original RGB: (" 
               << static_cast<int>(pixelPrueba.r) << ", " 
               << static_cast<int>(pixelPrueba.g) << ", " 
-              << static_cast<int>(pixelPrueba.b) << ")\n";
+              << static_cast<int>(pixelPrueba.b) << ")" << std::endl;
               
-    std::cout << "Valor Y (Punto Flotante) : " << static_cast<int>(grisFlotante) << "\n";
-    std::cout << "Valor Y (Punto Fijo)     : " << static_cast<int>(grisPuntoFijo) << "\n";
+    std::cout << "Valor Y (Punto Flotante) : " << static_cast<int>(grisFlotante) << std::endl;
+    std::cout << "Valor Y (Punto Fijo)     : " << static_cast<int>(grisPuntoFijo) << std::endl;
 
     return 0;
 }

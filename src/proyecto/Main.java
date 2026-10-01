@@ -54,14 +54,15 @@ public class Main {
             );
             
             // Configurar dimensiones de entrada, salida y columnas ASCII
-            pipeline.setDimensions(inW, inH, inW, inH, 1024);
+            pipeline.setDimensions(inW, inH, inW, inH, 512);
             
             // out.printf("inW: %d\ninH: %d\n", inW, inH);
             
-            pipeline.setFont(64, 64, 0.125, 1);
+            pipeline.setFont(64, 64, 0.25, 1);
             pipeline.setFps(fps);
-            pipeline.setCharset("!?@$%#mM0123456789*+=-:;.,/()[\\]<=>'\"{|}~`_ ");
-            // pipeline.setCharset("<=>&?#@$%~+*^-?Mmdbpq_/|\\'\".:{}[]() ");
+            pipeline.setCharset(" .:,;dbpq_|{}*+?<=>#$");
+            // pipeline.setCharset("!?@$%#mM0123456789*+=-:;.,/()[\\]<=>'\"{|}~`_ ");
+            // pipeline.setCharset("<=>&?#@$%~+*^-?dbpq_/|\\'\".:{}[]() ");
             // pipeline.setCharset("#@%^$/\\!:;.,-{|}$<=> ");
             // pipeline.setCharset("@#^~[]{}()/|.:'\"\\<=>$-+* ");
 
